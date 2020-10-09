@@ -1,0 +1,89 @@
+/***
+ * ClassName: SampleExamplesOfJavaStreams
+ * 
+ * Description:sample Exercise of streams
+ * 
+ * Date-09-10-2020
+ */
+
+
+
+package com.training.java8.streams;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+public class SampleExamplesOfJavaStreams {
+	
+	/***
+	 * Main Method (Execution starts here)
+	 */
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		
+	        List<String> nameList = new ArrayList<String>();
+	        
+		String[] names = {"Vinoth","Suresh","Jane","Roshan"};
+
+		/**
+		 * 1) Create an arraylist object calling streams in arraylist and counting 
+		 * 
+		 *  both intermediate and terminal
+		 */
+		
+	
+		 
+		nameList.add("Vinoth");
+
+		nameList.add("Suresh");
+		
+		nameList.add("Jane");
+		
+		nameList.add("Roshan");
+
+		
+		Stream<String> nameStreams = nameList.stream();
+		
+
+		System.out.println("");
+
+		System.out.println("Names and its count");
+		
+
+		System.out.println("***********************");
+		
+		long countOfNames = nameStreams.count();
+		
+		
+		System.out.println("Names Count -  " +countOfNames);
+		
+		
+		
+		
+		/***
+		 * Convert name string array to Streams
+		 */
+		
+		
+		
+		Stream<String> nameStream = Arrays.stream(names);
+		
+		long countNames=nameStream.count();
+		
+		System.out.println("");
+
+		System.out.println("Names and its count");
+		
+
+		System.out.println("***********************");
+		
+		System.out.println("Number of names in String array - "+countNames);
+		
+		
+	}
+
+}
