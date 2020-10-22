@@ -1,0 +1,194 @@
+/***
+ * ClassName:FixedDepositeController
+ * 
+ * Description:Class for getting all the fixedDeposite details
+ * 
+ * Date-15-10-2020
+ */
+
+package com.training.walmart.controller;
+
+import static org.hamcrest.CoreMatchers.nullValue;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.training.account.model.FixedDeposite;
+import com.training.account.model.LoanAccount;
+import com.training.accountcollection.service.FixedDepositeService;
+/***
+ * 
+ * this is the fixedDeposite controller class in this all the fd activities recedes
+ */
+@RestController
+public class FixedDepositeController {
+	/*FixedDeposite service class object is created using autowired annotation*/
+	
+	@Autowired
+	private FixedDepositeService fdservice;
+
+	
+	/***
+	 *  /fixedDeposites maps to this method and calls the service object method add fd
+	 *  
+	 *   also passing fd object and return  the object json
+	 * 
+	 * @param fd
+	 * 
+	 * @return fixed Deposite
+	 */
+	
+	@RequestMapping(value="/fixedDeposites",method=RequestMethod.POST)
+	public FixedDeposite createFixedDeposte(@RequestBody FixedDeposite fixedDeposite )
+	{
+		fdservice.addFixedDepositeAccount(fixedDeposite);
+	
+		
+		return fixedDeposite ;
+	}
+	
+	
+
+
+	/***
+	 * Url ending with /fixedDeposites mapped to get all deposite method
+	 * 
+	 * @param model
+	 * 
+	 * @return fixedDepositeList 
+	 * 
+	 * getting all the fd account
+	 */
+	
+	@RequestMapping(value="/fixedDeposites",method=RequestMethod.GET)
+	public List<FixedDeposite> getAllDeposite()
+	{
+		
+	List<FixedDeposite> fixedDepositeList =fdservice.getAllFixedDposites();	
+		
+		
+		return fixedDepositeList;
+	}
+	
+
+/***
+* Method for getting the details of an Fixed account by account number 
+* 
+* /fixedDeposites{id}maps to this method
+*
+* @param id -passing through query string
+*
+* @return - returning view (viewFixedDeposite)
+*/
+	
+	@RequestMapping(value="/fixedDeposites/{id}",method=RequestMethod.GET)
+	public FixedDeposite getFdAccount(@PathVariable int id ){
+		
+		FixedDeposite fdDeposite= fdservice.getFixedDepositeByAccountNumber(id);
+		
+	
+		
+		return fdDeposite;
+	}
+
+	
+	/***
+	*Fixed account by account number and deleting the fd
+	* 
+	*url /fixedDepostites{id} maps to this method
+	*
+	* @param id -passing through query string
+	* 
+	* @return - redirecting view (fixedDeposite)
+	*/
+		
+		@RequestMapping(value="/fixedDeposite/{id}",method=RequestMethod.DELETE)
+		public void getdeleteFdAccount(@PathVariable int id){
+			
+			fdservice.deleteFixedDepositeAccount(id);
+			
+			
+			
+			
+		}
+
+		
+		/***
+		 * url /fixedDeposite{id} Mapped to this method 
+		 * 
+		 * this method call updateExistingFdAccount using
+		 * 
+		 * fdService and passing the FixedDepositeObject
+		 * 
+		 * @param fixedDeposite
+		 * 
+		 * @return /fixedDeposite
+		 */
+		
+		@RequestMapping(value="/fixedDeposites/{id}",method=RequestMethod.PUT)
+		public FixedDeposite updateFd(@PathVariable int id,@RequestBody FixedDeposite fixedDeposite)
+		{
+			FixedDeposite fixed= fdservice.getFixedDepositeByAccountNumber(id);
+			if(fixed!=null)
+			{
+			fdservice.updateExistingFixedDepositeAccount(fixedDeposite);
+			}
+
+			return fixedDeposite;
+		}
+		
+		/***
+		 *  /sortFdAccounByName url maps to this method
+		 * 
+		 *   this method gets  sorted fdlist by name 
+		 * 
+		 * @param model - store fdlist in model
+		 * 
+		 * @return fixedDepositeList
+		 */
+		
+		@RequestMapping("/sortFixedAccountByName")
+		public String  sortFdAccountByName(Model model)
+		{
+			List<FixedDeposite> fixedDeposites = fdservice.getAllFixedDepositeSortByHolderName();
+			
+			model.addAttribute("FdList",fixedDeposites);
+			
+			return "fixedDepositeList";
+		}
+		
+		
+
+		/***
+		 *  /sortFdAccounByBalance url maps to this method
+		 * 
+		 *   this method gets  sorted fdlist by name 
+		 * 
+		 * @param model - store fdlist in model
+		 * 
+		 * @return fixedDepositeList
+		 */
+		
+		@RequestMapping("/sortFixedAccountByBalance")
+		public String  sortLurrentAccountByBalance(Model model)
+		
+			{
+			List<FixedDeposite> fixedDeposites = fdservice.getAllFixedDepositeSortByAccountBalance();
+			
+			model.addAttribute("FdList",fixedDeposites);
+			
+			return "fixedDepositeList";
+		}
+}
